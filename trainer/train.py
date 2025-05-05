@@ -6,7 +6,17 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
 mlflow.set_tracking_uri("http://mlflow:5000")
-mlflow.set_experiment("Housing")
+
+experiment_name = "Housing"
+experiment = mlflow.get_experiment_by_name(experiment_name)
+
+if experiment is None:
+    mlflow.create_experiment(
+        experiment_name,
+        artifact_location="file:/mlflow/artifacts/Housing"
+    )
+
+mlflow.set_experiment(experiment_name)
 
 # Загрузка данных
 data = fetch_california_housing()
