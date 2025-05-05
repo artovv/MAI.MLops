@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlflow_storage:/mlflow
+    command: >
+      mlflow server
+        --backend-store-uri sqlite:///mlflow/mlflow.db
+        --default-artifact-root file:/mlflow/artifacts
+        --host 0.0.0.0
+
+  trainer:
+    build:
+      context: ./trainer
+      dockerfile: Dockerfile
+    depends_on:
+      - mlflow
